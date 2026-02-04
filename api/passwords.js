@@ -1,19 +1,22 @@
-// Using CommonJS syntax (standard for Vercel Node.js functions)
 module.exports = async (req, res) => {
-  const ADMIN_PASS = "HamarESP";
+  // 1. Define the correct password
+  const CORRECT_PASS = "HamarESP";
   
-  // Log it so you can see it in the Vercel Dashboard Logs
-  console.log("Request received with query:", req.query);
-
+  // 2. Try to find the password in the URL (?adminPass=) 
+  // OR in the body (jsonData)
   const receivedPass = req.query.adminPass || req.body?.adminPass;
 
-  if (receivedPass === ADMIN_PASS) {
-    const passwords = "1234,5678,9999,0000"; // Replace with your list
-    
+  // DEBUG: This will show up in your Vercel Dashboard Logs
+  console.log("Password received:", receivedPass);
+
+  if (receivedPass === CORRECT_PASS) {
+    // 3. Return your passwords
+    const passwordList = "1234,5678,9999,0000"; 
     res.setHeader('Content-Type', 'text/plain');
-    return res.status(200).send(passwords);
+    return res.status(200).send(passwordList);
   }
 
+  // 4. Return an error if it doesn't match
   res.setHeader('Content-Type', 'text/plain');
   return res.status(401).send("Unauthorized");
 };
