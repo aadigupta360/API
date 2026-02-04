@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   // PASTE your Google Apps Script "Web App URL" here
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbywRH6sIwHBTA2-EEemFOBCvq0sX_6_cuHJoFhD5yo7gY7u4KtPl48iUj4Y3Jr19YyQ/exec";
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxd0G2R-CqQ3K71tjjuPFyDqamP9wmfxIeUVute8zHR2iR3O6SqoYZUE5eg8AgtCTrY/exec";
   const ADMIN_PASS = "HamarESP";
 
   const receivedPass = req.query.adminPass || req.body?.adminPass;
