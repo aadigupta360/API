@@ -1,18 +1,18 @@
 export default function handler(req, res) {
   const ADMIN_PASS = "HamarESP";
 
-  // Check the JSON body OR the URL query string (?adminPass=...)
-  const receivedPass = req.body?.adminPass || req.query?.adminPass;
+  // Check URL (?adminPass=...) OR the JSON body
+  const receivedPass = req.query.adminPass || req.body?.adminPass;
 
   if (receivedPass === ADMIN_PASS) {
-    // Replace this string with your Google Sheet fetch logic later if needed
     const passwordList = "1234,5678,9999,0000"; 
     
+    // Send as plain text to avoid any HTML wrapping by the proxy
     res.setHeader('Content-Type', 'text/plain');
     return res.status(200).send(passwordList);
   }
 
-  // If we reach here, the password didn't match
+  // If unauthorized, return plain text so the ESP32 doesn't see HTML
   res.setHeader('Content-Type', 'text/plain');
-  return res.status(401).send("401 Unauthorized: Password Mismatch");
+  return res.status(401).send("Error: Unauthorized");
 }
