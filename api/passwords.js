@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
 
   if (receivedPass === CORRECT_PASS) {
     // 3. Return your passwords
-    const passwordList = "1234,5678,9999,0000,6969"; 
+    const passwordList = "1234,5678,9999,0000,6969,1891"; 
     res.setHeader('Content-Type', 'text/plain');
     return res.status(200).send(passwordList);
   }
