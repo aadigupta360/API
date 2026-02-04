@@ -1,22 +1,28 @@
-module.exports = async (req, res) => {
-  // 1. Define the correct password
-  const CORRECT_PASS = "HamarESP";
-  
-  // 2. Try to find the password in the URL (?adminPass=) 
-  // OR in the body (jsonData)
+export default async function handler(req, res) {
+  // PASTE your Google Apps Script "Web App URL" here
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/XXXXX/exec";
+  const ADMIN_PASS = "HamarESP";
+
   const receivedPass = req.query.adminPass || req.body?.adminPass;
 
-  // DEBUG: This will show up in your Vercel Dashboard Logs
-  console.log("Password received:", receivedPass);
-
-  if (receivedPass === CORRECT_PASS) {
-    // 3. Return your passwords
-    const passwordList = "1234,5678,9999,0000,6969,1891"; 
+  // 1. Security check: Only your ESP32 (or you) can trigger the fetch
+  if (receivedPass !== ADMIN_PASS) {
     res.setHeader('Content-Type', 'text/plain');
-    return res.status(200).send(passwordList);
+    return res.status(401).send("Unauthorized");
   }
 
-  // 4. Return an error if it doesn't match
-  res.setHeader('Content-Type', 'text/plain');
-  return res.status(401).send("Unauthorized");
-};
+  try {
+    // 2. Fetch the latest 8-digit passwords from the Spreadsheet
+    const googleResponse = await fetch(GOOGLE_SCRIPT_URL);
+    const passwordList = await googleResponse.text();
+
+    // 3. Send the list to the ESP32
+    res.setHeader('Content-Type', 'text/plain');
+    return res.status(200).send(passwordList);
+    
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    res.setHeader('Content-Type', 'text/plain');
+    return res.status(500).send("Error fetching from Sheets");
+  }
+}
